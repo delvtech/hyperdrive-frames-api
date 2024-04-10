@@ -11,14 +11,14 @@ const publicClient = createPublicClient({
   transport: http(),
 });
 
-async function handler(req, res) {
+async function getHyperdriveData(address) {
   const hyperdrive = new ReadHyperdrive({
-    address: "0x392839dA0dACAC790bd825C81ce2c5E264D793a8", // hyperdrive contract address
+    address: address, // hyperdrive contract address
     publicClient,
   });
 
   const txnDataRes = await fetch(
-    "https://api-sepolia.etherscan.io/api?module=account&action=txlist&address=0x392839dA0dACAC790bd825C81ce2c5E264D793a8&startBlock=5660380=latest&apikey=A1EQP4FE7ND3JN5N4TYYXQIWWN8KD9HCNS"
+    `https://api-sepolia.etherscan.io/api?module=account&action=txlist&address=${address}&startBlock=5660380=latest&apikey=A1EQP4FE7ND3JN5N4TYYXQIWWN8KD9HCNS`
   );
   const txnDataJson = await txnDataRes.json();
   const numTxns = txnDataJson.result.length;
@@ -26,13 +26,16 @@ async function handler(req, res) {
   const fixedRate = (await hyperdrive.getSpotRate()).toString();
   const tvl = (await hyperdrive.getLiquidity()).toString();
 
-  return res.send(
-    JSON.stringify({
-      tvl,
-      fixedRate,
-      numTxns,
-    })
-  );
+  return JSON.stringify({
+    tvl,
+    fixedRate,
+    numTxns,
+  });
+}
+
+async function handler(req, res) {
+  const data = await getHyperdriveData(req.query.address);
+  return res.send(data);
 }
 
 const app = express();
