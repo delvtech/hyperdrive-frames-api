@@ -1,5 +1,7 @@
 {
   "type": "module",
+  "scripts": {},
+  "main": "index.js",
   "dependencies": {
     "@delvtech/hyperdrive-viem": "^0.0.3",
     "express": "^4.19.2",
