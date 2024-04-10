@@ -1,0 +1,9 @@
+{
+  "type": "module",
+  "dependencies": {
+    "@delvtech/hyperdrive-viem": "^0.0.3",
+    "express": "^4.19.2",
+    "next": "^14.1.4",
+    "viem": "^2.9.15"
+  }
+}
